@@ -2,15 +2,13 @@ import java.net.*;
 import java.io.*;
 import java.util.Scanner;
 
-// Client sends to a server messages
-
 
 public class Client {
     Socket sock;
     PrintWriter writer;
     Scanner scan;
 
-    public void run() {
+    public void run() throws IOException {
 
         scan = new Scanner(System.in);
         try {
@@ -27,12 +25,20 @@ public class Client {
             }
 
             writer.close();
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        } catch (ConnectException ex) {
+            System.out.print("Connection failed. Give it another try? Y/N: ");
+            String choice = scan.nextLine();
+            if (choice.equalsIgnoreCase("Y")) {
+                run();
+            } else {
+                ex.printStackTrace();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         Client client = new Client();
         client.run();
     }
